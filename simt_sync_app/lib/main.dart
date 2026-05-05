@@ -24,6 +24,11 @@ class SimtApp extends StatelessWidget {
         ),
       ),
 
+      // ✅ ROUTES FIXED
+      routes: {
+        "/login": (context) => LoginScreen(),
+      },
+
       home: LoginScreen(),
     );
   }

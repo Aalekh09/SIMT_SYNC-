@@ -25,6 +25,17 @@ class ApiService {
     return false;
   }
 
+  static Future<Map<String, dynamic>> getDashboard() async {
+  final res = await http.get(
+    Uri.parse("$baseUrl/dashboard"),
+    headers: {
+      "Authorization": "Bearer $token"
+    },
+  );
+
+  return jsonDecode(res.body);
+}
+
   // ADD USER (TEACHER / RECEPTION)
   static Future<bool> addUser(
     String name, String email, String password, String role) async {
