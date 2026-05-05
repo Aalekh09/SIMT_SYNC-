@@ -32,6 +32,19 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User createUser(User user) {
+
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new RuntimeException("Password is required");
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        System.out.println("Incoming password: " + user.getPassword());
+        return userRepository.save(user);
+    }
+
+
     @Autowired
     private JwtUtil jwtUtil;
     public LoginResponse login(LoginRequest request) {

@@ -26,14 +26,35 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
+
+                // 🔥 VERY IMPORTANT (disable default user system)
                 .userDetailsService(username -> null)
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/test-open").permitAll()
+
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/test-open").permitAll()
+
+                        // 🔐 ADMIN ONLY
+                        .requestMatchers("/users/**").hasRole("ADMIN")
+
+                        // 🔐 RECEPTION + ADMIN
+                        .requestMatchers("/enquiry/**").hasAnyRole("ADMIN", "RECEPTION")
+
+                        // 🔐 TEACHER + ADMIN
+                        .requestMatchers("/attendance/**").hasAnyRole("ADMIN", "TEACHER")
+
+                        // 🔐 STUDENT + ADMIN
+                        .requestMatchers("/student/**").hasAnyRole("ADMIN", "STUDENT")
+
                         .anyRequest().authenticated()
                 )
+
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+
+                // 🔥 JWT FILTER
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

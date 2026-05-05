@@ -1,5 +1,7 @@
 package com.simt.sync.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,6 +9,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "users")
 public class User {
 
@@ -19,8 +22,17 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @JsonProperty("password")
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

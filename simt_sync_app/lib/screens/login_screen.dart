@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import 'admin_dashboard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -9,41 +8,35 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final email = TextEditingController();
+  final password = TextEditingController();
 
   void login() async {
-    var data = await ApiService.login(
-      emailController.text,
-      passwordController.text,
-    );
+    bool success = await ApiService.login(email.text, password.text);
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("token", data["token"]);
-    await prefs.setString("role", data["role"]);
-
-    if (data["role"] == "ADMIN") {
-  Navigator.push(context,
-    MaterialPageRoute(builder: (_) => AdminDashboard()));
-} else if (data["role"] == "STUDENT") {
-  Navigator.push(context,
-    MaterialPageRoute(builder: (_) => StudentDashboard()));
-}
+    if (success) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => AdminDashboard()),
+      );
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Login Failed")));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("SIMT Sync Login")),
+      appBar: AppBar(title: Text("SIMT Login")),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            TextField(controller: emailController, decoration: InputDecoration(labelText: "Email")),
-            TextField(controller: passwordController, decoration: InputDecoration(labelText: "Password"), obscureText: true),
+            TextField(controller: email, decoration: InputDecoration(labelText: "Email")),
+            TextField(controller: password, decoration: InputDecoration(labelText: "Password")),
             SizedBox(height: 20),
-            ElevatedButton(onPressed: login, child: Text("Login")),
+            ElevatedButton(onPressed: login, child: Text("Login"))
           ],
         ),
       ),
