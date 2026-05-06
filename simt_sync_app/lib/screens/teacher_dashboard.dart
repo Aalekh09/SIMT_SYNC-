@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class StudentDashboard extends StatelessWidget {
+class TeacherDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Student Panel"),
+        title: Text("Teacher Panel"),
       ),
       body: Center(
         child: Text(
-          "Welcome Student",
+          "Welcome Teacher",
           style: TextStyle(fontSize: 24),
         ),
       ),
